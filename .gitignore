@@ -1,0 +1,11 @@
+# Jetbrains files
+.idea/*
+idea
+
+# Db files
+db.sqlite
+
+
+# Run scripts
+runDev.sh
+runProd.sh

@@ -1,0 +1,79 @@
+version: '3'
+
+services:
+
+
+  migrations:     # for migrations purposes after the server is up
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: bash -c "python manage.py migrate"
+
+    depends_on:
+      - web-wsgi
+      - web-asgi
+      - db
+      - redis
+
+  web-wsgi:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: gunicorn -b 0.0.0.0 -w 10 -p 8000 djangodockerblueprint.wsgi:application --timeout 3000 --graceful-timeout 300
+    expose:
+      - 8000
+    depends_on:
+      - db
+    volumes:
+      - media:/code/media
+      - .:/code
+    environment:
+      - DEBUG=TRUE
+
+  web-asgi:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: daphne -b 0.0.0.0 -p 9000 djangodockerblueprint.asgi:application
+    expose:
+      - 9000
+    depends_on:
+      - db
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 8000:80
+      - 443:80
+      - 80:80
+      - 8080:80
+    depends_on:
+      - web-wsgi
+      - web-asgi
+      - redis
+    volumes:
+      - .:/code  # for syncing with django source code
+      - ./nginx:/etc/nginx/conf.d
+      - media:/media
+
+
+  redis:
+    image: redis:latest
+    command: redis-server
+    expose:
+      - 6379
+
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    expose:
+      - 5432
+
+
+volumes:
+  media:
+  static:
+
