@@ -3,9 +3,13 @@
 idea
 
 # Db files
-db.sqlite
+db.sqlite3
 
 
 # Run scripts
 runDev.sh
 runProd.sh
+
+
+# Others
+8000
