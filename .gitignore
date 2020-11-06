@@ -10,6 +10,9 @@ db.sqlite3
 runDev.sh
 runProd.sh
 
+# VS code
+.vscode/*
+vscode
 
 # Others
 8000
