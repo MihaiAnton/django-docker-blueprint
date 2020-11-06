@@ -24,7 +24,7 @@ SECRET_KEY = os.environ.get(
     'SECRET_KEY', 'iuqwfiugfd6qFC^WDT&FF&FG8F^D^&@^Uw4h7g&*^R^&fYVA^x9y')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", "FALSE") == "TRUE"
+DEBUG = True  # os.environ.get("DEBUG", "FALSE") == "TRUE"
 
 ALLOWED_HOSTS = ["*"]
 
@@ -91,16 +91,25 @@ DJANGO_ADMIN_URL = '^admin/'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'db',
-        'PORT': 5432,
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR + '/db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'postgres',
+            'USER': 'postgres',
+            'PASSWORD': 'postgres',
+            'HOST': 'db',
+            'PORT': 5432,
+        }
+    }
+
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 

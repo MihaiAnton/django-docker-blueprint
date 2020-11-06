@@ -16,3 +16,8 @@ vscode
 
 # Others
 8000
+
+# Python cache
+__pycache__/
+migrations/
+
